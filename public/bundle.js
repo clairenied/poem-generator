@@ -58,37 +58,58 @@
 	
 	var _reactRedux = __webpack_require__(233);
 	
-	var _AppContainer = __webpack_require__(261);
+	var _LoginFormContainer = __webpack_require__(261);
+	
+	var _LoginFormContainer2 = _interopRequireDefault(_LoginFormContainer);
+	
+	var _CreateAccountContainer = __webpack_require__(289);
+	
+	var _CreateAccountContainer2 = _interopRequireDefault(_CreateAccountContainer);
+	
+	var _AppContainer = __webpack_require__(290);
 	
 	var _AppContainer2 = _interopRequireDefault(_AppContainer);
 	
-	var _PoemsContainer = __webpack_require__(300);
+	var _PoemsContainer = __webpack_require__(305);
 	
 	var _PoemsContainer2 = _interopRequireDefault(_PoemsContainer);
 	
-	var _PoemContainer = __webpack_require__(301);
+	var _PoemContainer = __webpack_require__(306);
 	
 	var _PoemContainer2 = _interopRequireDefault(_PoemContainer);
 	
-	var _AddPoem = __webpack_require__(303);
+	var _AddPoemContainer = __webpack_require__(308);
 	
-	var _AddPoem2 = _interopRequireDefault(_AddPoem);
+	var _AddPoemContainer2 = _interopRequireDefault(_AddPoemContainer);
 	
-	var _store = __webpack_require__(291);
+	var _store = __webpack_require__(295);
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _poems = __webpack_require__(304);
+	var _poems = __webpack_require__(310);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	// redux
 	// react
+	var noSessionRedirect = function noSessionRedirect() {
+		var stateObj = _store2.default.getState();
+		if (!stateObj.user.user.email) {
+			return _reactRouter.browserHistory.push('/login');
+		}
+	};
+	
+	// The Provider component provides the redux store to all elements it contains.
+	// It does so via this.context.store—ultimately this is how all of our connect components will have access to the store.
+	
+	
 	var loadPoemsContainer = function loadPoemsContainer() {
+		noSessionRedirect();
 		return _store2.default.dispatch((0, _poems.fetchPoemsFromServer)());
 	};
 	
 	var loadPoemContainer = function loadPoemContainer(nextRouterState) {
+		noSessionRedirect();
 		var poemId = nextRouterState.params.id;
 		return _store2.default.dispatch((0, _poems.fetchPoemFromServer)(poemId));
 	};
@@ -102,9 +123,11 @@
 			_react2.default.createElement(
 				_reactRouter.Route,
 				{ path: '/', component: _AppContainer2.default },
+				_react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginFormContainer2.default }),
+				_react2.default.createElement(_reactRouter.Route, { path: '/create-account', component: _CreateAccountContainer2.default }),
+				_react2.default.createElement(_reactRouter.Route, { path: '/poem/create', component: _AddPoemContainer2.default }),
 				_react2.default.createElement(_reactRouter.Route, { path: '/poem', component: _PoemsContainer2.default, onEnter: loadPoemsContainer }),
 				_react2.default.createElement(_reactRouter.Route, { path: '/poem/:id', component: _PoemContainer2.default, onEnter: loadPoemContainer }),
-				_react2.default.createElement(_reactRouter.Route, { path: '/poem/create', component: _AddPoem2.default }),
 				_react2.default.createElement(_reactRouter.IndexRedirect, { to: '/poem' })
 			)
 		)
@@ -28066,27 +28089,184 @@
 		value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	var _reactRedux = __webpack_require__(233);
 	
-	var _App = __webpack_require__(262);
+	var _react = __webpack_require__(1);
 	
-	var _App2 = _interopRequireDefault(_App);
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _users = __webpack_require__(262);
+	
+	var _reactRouter = __webpack_require__(178);
+	
+	var _NavbarUnauthorized = __webpack_require__(311);
+	
+	var _NavbarUnauthorized2 = _interopRequireDefault(_NavbarUnauthorized);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var mapStateToProps = function mapStateToProps(state, ownProps) {
-		return {
-			poems: state.poems
-		};
-	};
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var LoginForm = function (_React$Component) {
+		_inherits(LoginForm, _React$Component);
+	
+		function LoginForm(props) {
+			_classCallCheck(this, LoginForm);
+	
+			var _this = _possibleConstructorReturn(this, (LoginForm.__proto__ || Object.getPrototypeOf(LoginForm)).call(this, props));
+	
+			_this.state = {
+				email: '',
+				password: '',
+				emailWarning: false,
+				passwordWarning: false
+			};
+	
+			_this.handleSubmit = _this.handleSubmit.bind(_this);
+			_this.loginWithGoogle = _this.loginWithGoogle.bind(_this);
+			return _this;
+		}
+	
+		_createClass(LoginForm, [{
+			key: 'handleChange',
+			value: function handleChange(field, evt) {
+				this.setState(_defineProperty({}, field, evt.target.value));
+			}
+		}, {
+			key: 'handleSubmit',
+			value: function handleSubmit(evt) {
+				evt.preventDefault();
+				this.props.loginUser(this.state.email, this.state.password);
+			}
+		}, {
+			key: 'loginWithGoogle',
+			value: function loginWithGoogle(evt) {
+				evt.preventDefault();
+				this.props.loginUserWithGoogle();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(_NavbarUnauthorized2.default, null),
+					_react2.default.createElement(
+						'div',
+						{ className: 'login-form' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'login-title' },
+							_react2.default.createElement(
+								'div',
+								{ className: 'logo-image' },
+								_react2.default.createElement(
+									'h1',
+									null,
+									'(\u2002poem\u2002){\u2002generator\u2002};'
+								)
+							)
+						),
+						_react2.default.createElement(
+							'form',
+							{ onSubmit: this.handleSubmit },
+							_react2.default.createElement(
+								'h2',
+								null,
+								'Login'
+							),
+							_react2.default.createElement(
+								'label',
+								null,
+								'Your email'
+							),
+							_react2.default.createElement('input', {
+								type: 'text',
+								onChange: this.handleChange.bind(this, 'email'),
+								value: this.state.email,
+								name: 'email'
+							}),
+							_react2.default.createElement(
+								'label',
+								null,
+								'Your password'
+							),
+							_react2.default.createElement('input', {
+								type: 'text',
+								onChange: this.handleChange.bind(this, 'password'),
+								value: this.state.password,
+								name: 'password'
+							}),
+							_react2.default.createElement(
+								'button',
+								{ type: 'submit' },
+								'Login'
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'buffer oauth' },
+								_react2.default.createElement(
+									'a',
+									{ target: '_self',
+										onClick: this.loginWithGoogle,
+										href: '/auth/google',
+										className: 'button' },
+									_react2.default.createElement(
+										'span',
+										null,
+										'Or, Login with Google'
+									)
+								),
+								_react2.default.createElement(
+									'span',
+									null,
+									' | '
+								),
+								_react2.default.createElement(
+									_reactRouter.Link,
+									{ to: '/create-account' },
+									_react2.default.createElement(
+										'span',
+										null,
+										' No account?'
+									)
+								)
+							)
+						)
+					)
+				);
+			}
+		}]);
+	
+		return LoginForm;
+	}(_react2.default.Component);
+	
+	var mapStateToProps = function mapStateToProps(state, ownProps) {
 		return {};
 	};
 	
-	var AppContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_App2.default);
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+		return {
+			loginUser: function loginUser(email, password) {
+				dispatch((0, _users.loginUser)(email, password));
+			},
+			loginUserWithGoogle: function loginUserWithGoogle() {
+				dispatch((0, _users.loginUserWithGoogle)());
+			}
+		};
+	};
 	
-	exports.default = AppContainer;
+	var LoginFormContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LoginForm);
+	
+	exports.default = LoginFormContainer;
 
 /***/ },
 /* 262 */
@@ -28095,121 +28275,74 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
+	exports.createUser = exports.loginUserWithGoogle = exports.loginUser = undefined;
 	
-	exports.default = function (props) {
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(_Navbar2.default, null),
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'main' },
-	      props.children && _react2.default.cloneElement(props.children, props)
-	    )
-	  );
-	};
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(178);
-	
-	var _Navbar = __webpack_require__(263);
-	
-	var _Navbar2 = _interopRequireDefault(_Navbar);
-	
-	var _Poems = __webpack_require__(264);
-	
-	var _Poems2 = _interopRequireDefault(_Poems);
-	
-	var _axios = __webpack_require__(266);
+	var _axios = __webpack_require__(263);
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
-	var _store = __webpack_require__(291);
+	var _reactRouter = __webpack_require__(178);
 	
-	var _store2 = _interopRequireDefault(_store);
-
+	var _constants = __webpack_require__(288);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var setUser = function setUser(user) {
+		return {
+			type: _constants.LOGIN_USER,
+			user: user
+		};
+	};
+	
+	var addUser = function addUser(user) {
+		return {
+			type: _constants.ADD_USER,
+			user: user
+		};
+	};
+	
+	var loginUser = exports.loginUser = function loginUser(email, password) {
+		return function (dispatch) {
+			_axios2.default.post('/api/sessions/', {
+				email: email,
+				password: password
+			}).then(function (res) {
+				dispatch(setUser(res.data));
+				_reactRouter.browserHistory.push('/poem');
+			});
+		};
+	};
+	
+	var loginUserWithGoogle = exports.loginUserWithGoogle = function loginUserWithGoogle() {
+		return function (dispatch) {
+			_axios2.default.get('/auth/google/').then(function (res) {
+				dispatch(setUser(res.data));
+				_reactRouter.browserHistory.push('/poem');
+			});
+		};
+	};
+	
+	var createUser = exports.createUser = function createUser(email, password, firstName, lastName) {
+		return function (dispatch) {
+			_axios2.default.post('/api/user/', {
+				email: email,
+				password: password,
+				firstName: firstName,
+				lastName: lastName
+			}).then(function (res) {
+				dispatch(addUser(res.data));
+				_reactRouter.browserHistory.push('/login');
+			});
+		};
+	};
 
 /***/ },
 /* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(178);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var Navbar = function Navbar(props) {
-		return _react2.default.createElement(
-			'div',
-			{ className: 'navbar' },
-			_react2.default.createElement(
-				'div',
-				{ className: 'navbar-link-container' },
-				_react2.default.createElement(
-					_reactRouter.Link,
-					{ className: 'logo', to: '/poem' },
-					'The Poem Generator'
-				)
-			),
-			_react2.default.createElement(
-				'div',
-				{ className: 'navbar-right' },
-				_react2.default.createElement(
-					'div',
-					{ className: 'navbar-link-container' },
-					_react2.default.createElement(
-						'a',
-						{ href: '/about' },
-						'About'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'navbar-link-container' },
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: '/poem/create' },
-						'Add Poem'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'navbar-link-container' },
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: '/poem/create' },
-						'Me'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'navbar-link-container' },
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: '/poem/create' },
-						'Logout'
-					)
-				)
-			)
-		);
-	};
-	
-	exports.default = Navbar;
+	module.exports = __webpack_require__(264);
 
 /***/ },
 /* 264 */
@@ -28217,134 +28350,10 @@
 
 	'use strict';
 	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _Poem = __webpack_require__(265);
-	
-	var _Poem2 = _interopRequireDefault(_Poem);
-	
-	var _reactRouter = __webpack_require__(178);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var Poems = function Poems(props) {
-		var poems = props.poems.poems;
-		return _react2.default.createElement(
-			'div',
-			null,
-			_react2.default.createElement(
-				'div',
-				{ className: 'title' },
-				_react2.default.createElement(
-					_reactRouter.Link,
-					{ to: '/poem' },
-					_react2.default.createElement(
-						'h1',
-						null,
-						'All Poems'
-					)
-				)
-			),
-			poems.map(function (poem) {
-				return _react2.default.createElement(_Poem2.default, { poem: poem, key: poem.id });
-			})
-		);
-	};
-	
-	exports.default = Poems;
-
-/***/ },
-/* 265 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(178);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var Poem = function Poem(props) {
-		console.log('poem props', props.poem);
-		var poem = props.poem;
-		return _react2.default.createElement(
-			'div',
-			{ className: 'post' },
-			_react2.default.createElement(
-				'h2',
-				null,
-				_react2.default.createElement(
-					_reactRouter.Link,
-					{ to: '/poem/' + poem.id },
-					poem.title
-				)
-			),
-			_react2.default.createElement(
-				'p',
-				null,
-				_react2.default.createElement(
-					'i',
-					null,
-					'Poem username placeholder'
-				)
-			),
-			_react2.default.createElement(
-				'p',
-				null,
-				poem.text
-			),
-			_react2.default.createElement(
-				'p',
-				null,
-				_react2.default.createElement(
-					'i',
-					null,
-					poem.dateCreated
-				)
-			),
-			_react2.default.createElement(
-				'p',
-				null,
-				_react2.default.createElement(
-					'a',
-					{ className: 'tag' },
-					'Poem tags placeholder, poem tags placeholder'
-				)
-			)
-		);
-	};
-	
-	exports.default = Poem;
-
-/***/ },
-/* 266 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(267);
-
-/***/ },
-/* 267 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var utils = __webpack_require__(268);
-	var bind = __webpack_require__(269);
-	var Axios = __webpack_require__(270);
-	var defaults = __webpack_require__(271);
+	var utils = __webpack_require__(265);
+	var bind = __webpack_require__(266);
+	var Axios = __webpack_require__(267);
+	var defaults = __webpack_require__(268);
 	
 	/**
 	 * Create an instance of Axios
@@ -28377,15 +28386,15 @@
 	};
 	
 	// Expose Cancel & CancelToken
-	axios.Cancel = __webpack_require__(288);
-	axios.CancelToken = __webpack_require__(289);
-	axios.isCancel = __webpack_require__(285);
+	axios.Cancel = __webpack_require__(285);
+	axios.CancelToken = __webpack_require__(286);
+	axios.isCancel = __webpack_require__(282);
 	
 	// Expose all/spread
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(290);
+	axios.spread = __webpack_require__(287);
 	
 	module.exports = axios;
 	
@@ -28394,12 +28403,12 @@
 
 
 /***/ },
-/* 268 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var bind = __webpack_require__(269);
+	var bind = __webpack_require__(266);
 	
 	/*global toString:true*/
 	
@@ -28699,7 +28708,7 @@
 
 
 /***/ },
-/* 269 */
+/* 266 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -28716,17 +28725,17 @@
 
 
 /***/ },
-/* 270 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var defaults = __webpack_require__(271);
-	var utils = __webpack_require__(268);
-	var InterceptorManager = __webpack_require__(282);
-	var dispatchRequest = __webpack_require__(283);
-	var isAbsoluteURL = __webpack_require__(286);
-	var combineURLs = __webpack_require__(287);
+	var defaults = __webpack_require__(268);
+	var utils = __webpack_require__(265);
+	var InterceptorManager = __webpack_require__(279);
+	var dispatchRequest = __webpack_require__(280);
+	var isAbsoluteURL = __webpack_require__(283);
+	var combineURLs = __webpack_require__(284);
 	
 	/**
 	 * Create a new instance of Axios
@@ -28807,13 +28816,13 @@
 
 
 /***/ },
-/* 271 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(268);
-	var normalizeHeaderName = __webpack_require__(272);
+	var utils = __webpack_require__(265);
+	var normalizeHeaderName = __webpack_require__(269);
 	
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -28830,10 +28839,10 @@
 	  var adapter;
 	  if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(273);
+	    adapter = __webpack_require__(270);
 	  } else if (typeof process !== 'undefined') {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(273);
+	    adapter = __webpack_require__(270);
 	  }
 	  return adapter;
 	}
@@ -28907,12 +28916,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 272 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(268);
+	var utils = __webpack_require__(265);
 	
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -28925,18 +28934,18 @@
 
 
 /***/ },
-/* 273 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(268);
-	var settle = __webpack_require__(274);
-	var buildURL = __webpack_require__(277);
-	var parseHeaders = __webpack_require__(278);
-	var isURLSameOrigin = __webpack_require__(279);
-	var createError = __webpack_require__(275);
-	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(280);
+	var utils = __webpack_require__(265);
+	var settle = __webpack_require__(271);
+	var buildURL = __webpack_require__(274);
+	var parseHeaders = __webpack_require__(275);
+	var isURLSameOrigin = __webpack_require__(276);
+	var createError = __webpack_require__(272);
+	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(277);
 	
 	module.exports = function xhrAdapter(config) {
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -29032,7 +29041,7 @@
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(281);
+	      var cookies = __webpack_require__(278);
 	
 	      // Add xsrf header
 	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -29109,12 +29118,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 274 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createError = __webpack_require__(275);
+	var createError = __webpack_require__(272);
 	
 	/**
 	 * Resolve or reject a Promise based on response status.
@@ -29140,12 +29149,12 @@
 
 
 /***/ },
-/* 275 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var enhanceError = __webpack_require__(276);
+	var enhanceError = __webpack_require__(273);
 	
 	/**
 	 * Create an Error with the specified message, config, error code, and response.
@@ -29163,7 +29172,7 @@
 
 
 /***/ },
-/* 276 */
+/* 273 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29188,12 +29197,12 @@
 
 
 /***/ },
-/* 277 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(268);
+	var utils = __webpack_require__(265);
 	
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -29262,12 +29271,12 @@
 
 
 /***/ },
-/* 278 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(268);
+	var utils = __webpack_require__(265);
 	
 	/**
 	 * Parse headers into an object
@@ -29305,12 +29314,12 @@
 
 
 /***/ },
-/* 279 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(268);
+	var utils = __webpack_require__(265);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -29379,7 +29388,7 @@
 
 
 /***/ },
-/* 280 */
+/* 277 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29421,12 +29430,12 @@
 
 
 /***/ },
-/* 281 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(268);
+	var utils = __webpack_require__(265);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -29480,12 +29489,12 @@
 
 
 /***/ },
-/* 282 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(268);
+	var utils = __webpack_require__(265);
 	
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -29538,15 +29547,15 @@
 
 
 /***/ },
-/* 283 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(268);
-	var transformData = __webpack_require__(284);
-	var isCancel = __webpack_require__(285);
-	var defaults = __webpack_require__(271);
+	var utils = __webpack_require__(265);
+	var transformData = __webpack_require__(281);
+	var isCancel = __webpack_require__(282);
+	var defaults = __webpack_require__(268);
 	
 	/**
 	 * Throws a `Cancel` if cancellation has been requested.
@@ -29623,12 +29632,12 @@
 
 
 /***/ },
-/* 284 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(268);
+	var utils = __webpack_require__(265);
 	
 	/**
 	 * Transform the data for a request or a response
@@ -29649,7 +29658,7 @@
 
 
 /***/ },
-/* 285 */
+/* 282 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29660,7 +29669,7 @@
 
 
 /***/ },
-/* 286 */
+/* 283 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29680,7 +29689,7 @@
 
 
 /***/ },
-/* 287 */
+/* 284 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29698,7 +29707,7 @@
 
 
 /***/ },
-/* 288 */
+/* 285 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29723,12 +29732,12 @@
 
 
 /***/ },
-/* 289 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Cancel = __webpack_require__(288);
+	var Cancel = __webpack_require__(285);
 	
 	/**
 	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -29786,7 +29795,7 @@
 
 
 /***/ },
-/* 290 */
+/* 287 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29819,7 +29828,489 @@
 
 
 /***/ },
+/* 288 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var RECEIVE_POEMS = exports.RECEIVE_POEMS = 'RECEIVE_POEMS';
+	var RECEIVE_POEM = exports.RECEIVE_POEM = 'RECEIVE_POEM';
+	var ADD_POEM = exports.ADD_POEM = 'ADD_POEM';
+	
+	var LOGIN_USER = exports.LOGIN_USER = 'LOGIN_USER';
+	var ADD_USER = exports.ADD_USER = 'ADD_USER';
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+			value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _reactRedux = __webpack_require__(233);
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _users = __webpack_require__(262);
+	
+	var _reactRouter = __webpack_require__(178);
+	
+	var _NavbarUnauthorized = __webpack_require__(311);
+	
+	var _NavbarUnauthorized2 = _interopRequireDefault(_NavbarUnauthorized);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var CreateAccount = function (_React$Component) {
+			_inherits(CreateAccount, _React$Component);
+	
+			function CreateAccount(props) {
+					_classCallCheck(this, CreateAccount);
+	
+					var _this = _possibleConstructorReturn(this, (CreateAccount.__proto__ || Object.getPrototypeOf(CreateAccount)).call(this, props));
+	
+					_this.state = {
+							email: '',
+							password: '',
+							confirmPassword: '',
+							passwordMatch: _this.password === _this.confirmPassword,
+							firstName: '',
+							lastName: ''
+					};
+	
+					_this.handleSubmit = _this.handleSubmit.bind(_this);
+					return _this;
+			}
+	
+			_createClass(CreateAccount, [{
+					key: 'handleChange',
+					value: function handleChange(field, evt) {
+							this.setState(_defineProperty({}, field, evt.target.value));
+					}
+			}, {
+					key: 'handleSubmit',
+					value: function handleSubmit(evt) {
+							evt.preventDefault();
+							var userToCreate = this.state;
+							this.props.createUser(this.state.email, this.state.password, this.state.firstName, this.state.lastName);
+							return;
+					}
+			}, {
+					key: 'render',
+					value: function render() {
+							return _react2.default.createElement(
+									'div',
+									null,
+									_react2.default.createElement(_NavbarUnauthorized2.default, null),
+									_react2.default.createElement(
+											'div',
+											{ className: 'login-form' },
+											_react2.default.createElement(
+													'form',
+													{ onSubmit: this.handleSubmit },
+													_react2.default.createElement(
+															'h2',
+															null,
+															'Create Account'
+													),
+													_react2.default.createElement(
+															'label',
+															null,
+															'First Name'
+													),
+													_react2.default.createElement('input', {
+															type: 'text',
+															onChange: this.handleChange.bind(this, 'firstName'),
+															value: this.state.firstName,
+															name: 'firstName' }),
+													_react2.default.createElement(
+															'label',
+															null,
+															'Last Name'
+													),
+													_react2.default.createElement('input', {
+															type: 'text',
+															onChange: this.handleChange.bind(this, 'lastName'),
+															value: this.state.lastName,
+															name: 'lastName'
+													}),
+													_react2.default.createElement(
+															'label',
+															null,
+															'Email'
+													),
+													_react2.default.createElement('input', {
+															type: 'text',
+															onChange: this.handleChange.bind(this, 'email'),
+															value: this.state.email,
+															name: 'email'
+													}),
+													_react2.default.createElement(
+															'label',
+															null,
+															'Password'
+													),
+													_react2.default.createElement('input', {
+															type: 'text',
+															onChange: this.handleChange.bind(this, 'password'),
+															value: this.state.password,
+															name: 'password'
+													}),
+													_react2.default.createElement(
+															'label',
+															null,
+															'Confirm Password'
+													),
+													_react2.default.createElement('input', {
+															type: 'text',
+															onChange: this.handleChange.bind(this, 'confirmPassword'),
+															value: this.state.confirmPassword,
+															name: 'confirmPassword'
+													}),
+													_react2.default.createElement(
+															'button',
+															{ type: 'submit' },
+															'Create Account'
+													),
+													_react2.default.createElement(
+															'div',
+															{ className: 'buffer oauth' },
+															_react2.default.createElement(
+																	'a',
+																	{ target: '_self',
+																			href: '/auth/google',
+																			className: 'button' },
+																	_react2.default.createElement(
+																			'span',
+																			null,
+																			'Or, Create Account with Google'
+																	)
+															),
+															_react2.default.createElement(
+																	'span',
+																	null,
+																	' | '
+															),
+															_react2.default.createElement(
+																	_reactRouter.Link,
+																	{ to: '/login' },
+																	_react2.default.createElement(
+																			'span',
+																			null,
+																			' Have an Account Already? '
+																	)
+															)
+													)
+											)
+									)
+							);
+					}
+			}]);
+	
+			return CreateAccount;
+	}(_react2.default.Component);
+	
+	var mapStateToProps = function mapStateToProps(state, ownProps) {
+			return {};
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+			return {
+					createUser: function createUser(email, password, firstName, lastName) {
+							dispatch((0, _users.createUser)(email, password, firstName, lastName));
+					}
+			};
+	};
+	
+	var CreateAccountContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(CreateAccount);
+	
+	exports.default = CreateAccountContainer;
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _reactRedux = __webpack_require__(233);
+	
+	var _App = __webpack_require__(291);
+	
+	var _App2 = _interopRequireDefault(_App);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state, ownProps) {
+		return {
+			poems: state.poems,
+			user: state.user
+		};
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+		return {};
+	};
+	
+	var AppContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_App2.default);
+	
+	exports.default = AppContainer;
+
+/***/ },
 /* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	exports.default = function (props) {
+		return _react2.default.createElement(
+			'div',
+			null,
+			_react2.default.createElement(
+				'div',
+				{ className: 'main' },
+				props.children && _react2.default.cloneElement(props.children, props)
+			)
+		);
+	};
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(178);
+	
+	var _Navbar = __webpack_require__(292);
+	
+	var _Navbar2 = _interopRequireDefault(_Navbar);
+	
+	var _Poems = __webpack_require__(293);
+	
+	var _Poems2 = _interopRequireDefault(_Poems);
+	
+	var _axios = __webpack_require__(263);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	var _store = __webpack_require__(295);
+	
+	var _store2 = _interopRequireDefault(_store);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(178);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Navbar = function Navbar(props) {
+		return _react2.default.createElement(
+			'div',
+			{ className: 'navbar' },
+			_react2.default.createElement(
+				'div',
+				{ className: 'navbar-link-container' },
+				_react2.default.createElement(
+					_reactRouter.Link,
+					{ className: 'logo', to: '/poem' },
+					'The Poem Generator'
+				)
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'navbar-right' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'navbar-link-container' },
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: '/poem/create' },
+						'Add Poem'
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'navbar-link-container' },
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: '/poem/create' },
+						'Me'
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'navbar-link-container' },
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: '/login' },
+						'Logout'
+					)
+				)
+			)
+		);
+	};
+	
+	exports.default = Navbar;
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _Poem = __webpack_require__(294);
+	
+	var _Poem2 = _interopRequireDefault(_Poem);
+	
+	var _reactRouter = __webpack_require__(178);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Poems = function Poems(props) {
+		var poems = props.poems;
+		return _react2.default.createElement(
+			'div',
+			null,
+			_react2.default.createElement(Navbar, null),
+			_react2.default.createElement(
+				'div',
+				{ className: 'title' },
+				_react2.default.createElement(
+					_reactRouter.Link,
+					{ to: '/poem' },
+					_react2.default.createElement(
+						'h1',
+						null,
+						'All Poems'
+					)
+				)
+			),
+			poems.map(function (poem) {
+				return _react2.default.createElement(_Poem2.default, { poem: poem, key: poem.id });
+			})
+		);
+	};
+	
+	exports.default = Poems;
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(178);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Poem = function Poem(props) {
+		var poem = props.poem;
+		console.log('poem props', props);
+		return _react2.default.createElement(
+			'div',
+			{ className: 'post' },
+			_react2.default.createElement(
+				'h2',
+				null,
+				_react2.default.createElement(
+					_reactRouter.Link,
+					{ to: '/poem/' + poem.id },
+					poem.title
+				)
+			),
+			_react2.default.createElement(
+				'p',
+				null,
+				_react2.default.createElement(
+					'i',
+					null,
+					'Poem username placeholder'
+				)
+			),
+			_react2.default.createElement(
+				'p',
+				null,
+				poem.text
+			),
+			_react2.default.createElement(
+				'p',
+				null,
+				_react2.default.createElement(
+					'i',
+					null,
+					poem.dateCreated
+				)
+			),
+			_react2.default.createElement(
+				'p',
+				null,
+				_react2.default.createElement(
+					'a',
+					{ className: 'tag' },
+					'Poem tags placeholder, poem tags placeholder'
+				)
+			)
+		);
+	};
+	
+	exports.default = Poem;
+
+/***/ },
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29830,26 +30321,28 @@
 	
 	var _redux = __webpack_require__(240);
 	
-	var _reduxLogger = __webpack_require__(292);
+	var _reduxLogger = __webpack_require__(296);
 	
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 	
-	var _reduxThunk = __webpack_require__(298);
+	var _reduxThunk = __webpack_require__(302);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
-	var _poemsReducer = __webpack_require__(299);
+	var _poemsReducer = __webpack_require__(303);
 	
-	var _poemsReducer2 = _interopRequireDefault(_poemsReducer);
+	var _usersReducer = __webpack_require__(304);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = (0, _redux.createStore)((0, _redux.combineReducers)({
-		poems: _poemsReducer2.default
+		poems: _poemsReducer.poemsReducer,
+		poem: _poemsReducer.poemReducer,
+		user: _usersReducer.userReducer
 	}), (0, _redux.applyMiddleware)((0, _reduxLogger2.default)(), _reduxThunk2.default));
 
 /***/ },
-/* 292 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29860,11 +30353,11 @@
 	  value: true
 	});
 	
-	var _core = __webpack_require__(293);
+	var _core = __webpack_require__(297);
 	
-	var _helpers = __webpack_require__(294);
+	var _helpers = __webpack_require__(298);
 	
-	var _defaults = __webpack_require__(297);
+	var _defaults = __webpack_require__(301);
 	
 	var _defaults2 = _interopRequireDefault(_defaults);
 	
@@ -29967,7 +30460,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 293 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29977,9 +30470,9 @@
 	});
 	exports.printBuffer = printBuffer;
 	
-	var _helpers = __webpack_require__(294);
+	var _helpers = __webpack_require__(298);
 	
-	var _diff = __webpack_require__(295);
+	var _diff = __webpack_require__(299);
 	
 	var _diff2 = _interopRequireDefault(_diff);
 	
@@ -30108,7 +30601,7 @@
 	}
 
 /***/ },
-/* 294 */
+/* 298 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -30132,7 +30625,7 @@
 	var timer = exports.timer = typeof performance !== "undefined" && performance !== null && typeof performance.now === "function" ? performance : Date;
 
 /***/ },
-/* 295 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30142,7 +30635,7 @@
 	});
 	exports.default = diffLogger;
 	
-	var _deepDiff = __webpack_require__(296);
+	var _deepDiff = __webpack_require__(300);
 	
 	var _deepDiff2 = _interopRequireDefault(_deepDiff);
 	
@@ -30228,7 +30721,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 296 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -30657,7 +31150,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 297 */
+/* 301 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -30708,7 +31201,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 298 */
+/* 302 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30736,7 +31229,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 299 */
+/* 303 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30746,10 +31239,15 @@
 	});
 	var initialState = {
 		poems: [],
-		poem: {}
+		poem: {
+			tags: [],
+			user: {
+				email: ''
+			}
+		}
 	};
 	
-	var reducer = function reducer() {
+	var poemsReducer = exports.poemsReducer = function poemsReducer() {
 		var prev = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
 		var action = arguments[1];
 	
@@ -30759,19 +31257,61 @@
 					poems: action.poems
 				});
 				break;
-			case 'RECEIVE_POEM':
-				return Object.assign({}, prev, {
-					poem: action.poem
-				});
 			default:
 				return prev;
 		}
 	};
 	
-	exports.default = reducer;
+	var poemReducer = exports.poemReducer = function poemReducer() {
+		var prev = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+		var action = arguments[1];
+	
+		switch (action.type) {
+			case 'RECEIVE_POEM':
+				return Object.assign({}, prev, {
+					poem: action.poem
+				});
+				break;
+			default:
+				return prev;
+		}
+	};
 
 /***/ },
-/* 300 */
+/* 304 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var initialState = {
+		user: {}
+	};
+	
+	var userReducer = exports.userReducer = function userReducer() {
+		var prev = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+		var action = arguments[1];
+	
+		switch (action.type) {
+			case 'LOGIN_USER':
+				return Object.assign({}, prev, {
+					user: action.user
+				});
+				break;
+			case 'ADD_USER':
+				return Object.assign({}, prev, {
+					user: action.user
+				});
+				break;
+			default:
+				return prev;
+		}
+	};
+
+/***/ },
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30782,7 +31322,7 @@
 	
 	var _reactRedux = __webpack_require__(233);
 	
-	var _Poems = __webpack_require__(264);
+	var _Poems = __webpack_require__(293);
 	
 	var _Poems2 = _interopRequireDefault(_Poems);
 	
@@ -30790,7 +31330,7 @@
 	
 	var mapStateToProps = function mapStateToProps(state, ownProps) {
 		return {
-			poems: state.poems
+			poems: state.poems.poems
 		};
 	};
 	
@@ -30803,7 +31343,7 @@
 	exports.default = PoemsContainer;
 
 /***/ },
-/* 301 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30814,7 +31354,7 @@
 	
 	var _reactRedux = __webpack_require__(233);
 	
-	var _PoemPage = __webpack_require__(302);
+	var _PoemPage = __webpack_require__(307);
 	
 	var _PoemPage2 = _interopRequireDefault(_PoemPage);
 	
@@ -30822,12 +31362,27 @@
 	
 	var mapStateToProps = function mapStateToProps(state, ownProps) {
 		return {
-			poem: state.poems.poem
+			poem: state.poem.poem
+			// tags: state.poem.poem.tags
 		};
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
-		return {};
+		return {
+			deletePoem: function (_deletePoem) {
+				function deletePoem(_x) {
+					return _deletePoem.apply(this, arguments);
+				}
+	
+				deletePoem.toString = function () {
+					return _deletePoem.toString();
+				};
+	
+				return deletePoem;
+			}(function (id) {
+				dispatch(deletePoem(id));
+			})
+		};
 	};
 	
 	var PoemContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_PoemPage2.default);
@@ -30835,7 +31390,7 @@
 	exports.default = PoemContainer;
 
 /***/ },
-/* 302 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30843,6 +31398,8 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	var _react = __webpack_require__(1);
 	
@@ -30854,9 +31411,12 @@
 	
 	var PoemPage = function PoemPage(props) {
 		var poem = props.poem;
+		var tags = props.poem.tags;
+		console.log('typeof props.poem.poem', _typeof(props.poem.poem));
 		return _react2.default.createElement(
 			'div',
 			null,
+			_react2.default.createElement(Navbar, null),
 			_react2.default.createElement(
 				'div',
 				{ className: 'title' },
@@ -30875,7 +31435,7 @@
 					_react2.default.createElement(
 						'i',
 						null,
-						'Poem username placeholder'
+						poem.user.username
 					)
 				),
 				_react2.default.createElement(
@@ -30895,83 +31455,105 @@
 				_react2.default.createElement(
 					'p',
 					null,
-					_react2.default.createElement(
-						'a',
-						{ className: 'tag' },
-						'Poem tags placeholder, poem tags placeholder'
-					)
+					tags.map(function (tag, i) {
+						return _react2.default.createElement(
+							'a',
+							{ key: i },
+							tag,
+							'\u2003'
+						);
+					})
+				),
+				_react2.default.createElement(
+					'a',
+					null,
+					'Edit'
+				),
+				'/',
+				_react2.default.createElement(
+					'a',
+					null,
+					'Delete'
 				)
 			)
 		);
 	};
 	
 	exports.default = PoemPage;
+	
+	// <p>{ 
+	// 		    	poem.tags.map(tag => {
+	// 		    		return <a className="tag">tag</a>
+	// 		    	})}
+	// 		    </p>
 
 /***/ },
-/* 303 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+			value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _reactRedux = __webpack_require__(233);
+	
+	var _AddPoem = __webpack_require__(309);
+	
+	var _AddPoem2 = _interopRequireDefault(_AddPoem);
+	
+	var _poems = __webpack_require__(310);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var AddPoem = function AddPoem(props) {
-		return _react2.default.createElement(
-			"div",
-			null,
-			_react2.default.createElement(
-				"form",
-				null,
-				_react2.default.createElement(
-					"h2",
-					null,
-					"Add Poem"
-				),
-				_react2.default.createElement(
-					"label",
-					null,
-					"Username"
-				),
-				_react2.default.createElement("input", { type: "text", name: "username" }),
-				_react2.default.createElement(
-					"label",
-					null,
-					"Title"
-				),
-				_react2.default.createElement("input", { type: "text", name: "title" }),
-				_react2.default.createElement(
-					"label",
-					null,
-					"Poem"
-				),
-				_react2.default.createElement("textarea", { name: "text" }),
-				_react2.default.createElement(
-					"label",
-					null,
-					"Tags"
-				),
-				_react2.default.createElement("input", { type: "text", name: "tags" }),
-				_react2.default.createElement(
-					"button",
-					null,
-					"Submit"
-				)
-			)
-		);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var AddPoemContainer = function (_React$Component) {
+			_inherits(AddPoemContainer, _React$Component);
+	
+			function AddPoemContainer(props) {
+					_classCallCheck(this, AddPoemContainer);
+	
+					return _possibleConstructorReturn(this, (AddPoemContainer.__proto__ || Object.getPrototypeOf(AddPoemContainer)).call(this, props));
+			}
+	
+			_createClass(AddPoemContainer, [{
+					key: 'render',
+					value: function render() {
+							return _react2.default.createElement(_AddPoem2.default, { createPoem: this.props.createPoem });
+					}
+			}]);
+	
+			return AddPoemContainer;
+	}(_react2.default.Component);
+	
+	var mapStateToProps = function mapStateToProps(state, ownProps) {
+			return {};
 	};
 	
-	exports.default = AddPoem;
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+			return {
+					createPoem: function createPoem(poem) {
+							dispatch((0, _poems.createPoem)(poem));
+					}
+			};
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(AddPoemContainer);
 
 /***/ },
-/* 304 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30979,22 +31561,123 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.fetchPoemFromServer = exports.fetchPoemsFromServer = exports.addPoem = undefined;
 	
-	var _axios = __webpack_require__(266);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _axios2 = _interopRequireDefault(_axios);
+	var _react = __webpack_require__(1);
 	
-	var _constants = __webpack_require__(305);
+	var _react2 = _interopRequireDefault(_react);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var addPoem = exports.addPoem = function addPoem(text) {
-		return {
-			type: _constants.ADD_POEM,
-			text: text
-		};
-	};
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	// remember to come back and have the poems automatically associate with their users
+	
+	var AddPoem = function (_React$Component) {
+		_inherits(AddPoem, _React$Component);
+	
+		function AddPoem(props) {
+			_classCallCheck(this, AddPoem);
+	
+			var _this = _possibleConstructorReturn(this, (AddPoem.__proto__ || Object.getPrototypeOf(AddPoem)).call(this, props));
+	
+			_this.state = {
+				title: '',
+				text: '',
+				tags: ''
+			};
+			_this.handleSubmit = _this.handleSubmit.bind(_this);
+			return _this;
+		}
+	
+		_createClass(AddPoem, [{
+			key: 'handleChange',
+			value: function handleChange(field, evt) {
+				this.setState(_defineProperty({}, field, evt.target.value));
+			}
+		}, {
+			key: 'handleSubmit',
+			value: function handleSubmit(evt) {
+				evt.preventDefault();
+				var newPoem = this.state;
+				this.props.createPoem(newPoem);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(Navbar, null),
+					_react2.default.createElement(
+						'form',
+						{ onSubmit: this.handleSubmit },
+						_react2.default.createElement(
+							'h2',
+							null,
+							'Now Editing ',
+							this.state.title
+						),
+						_react2.default.createElement(
+							'label',
+							null,
+							'Title'
+						),
+						_react2.default.createElement('input', { type: 'text', onChange: this.handleChange.bind(this, 'title'), value: this.state.title, name: 'title' }),
+						_react2.default.createElement(
+							'label',
+							null,
+							'Poem'
+						),
+						_react2.default.createElement('textarea', { onChange: this.handleChange.bind(this, 'text'), value: this.state.poem, name: 'text' }),
+						_react2.default.createElement(
+							'label',
+							null,
+							'Tags'
+						),
+						_react2.default.createElement('input', { type: 'text', onChange: this.handleChange.bind(this, 'tags'), value: this.state.tags, name: 'tags' }),
+						_react2.default.createElement(
+							'button',
+							null,
+							'Submit'
+						)
+					)
+				);
+			}
+		}]);
+	
+		return AddPoem;
+	}(_react2.default.Component);
+	
+	exports.default = AddPoem;
+
+/***/ },
+/* 310 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.deletePoem = exports.createPoem = exports.fetchPoemFromServer = exports.fetchPoemsFromServer = undefined;
+	
+	var _axios = __webpack_require__(263);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	var _reactRouter = __webpack_require__(178);
+	
+	var _constants = __webpack_require__(288);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var setPoems = function setPoems(poems) {
 		return {
@@ -31007,6 +31690,13 @@
 		return {
 			type: _constants.RECEIVE_POEM,
 			poem: poem
+		};
+	};
+	
+	var addPoem = function addPoem(text) {
+		return {
+			type: _constants.ADD_POEM,
+			text: text
 		};
 	};
 	
@@ -31025,19 +31715,58 @@
 			});
 		};
 	};
+	
+	var createPoem = exports.createPoem = function createPoem(poem) {
+		return function (dispatch, getState) {
+			return _axios2.default.post('/api/poem/create', {
+				title: poem.title,
+				text: poem.text,
+				tags: poem.tags
+			}).then(function (res) {
+				return res.data;
+			}).then(function () {
+				var newPoems = getState().poems.poems;
+				dispatch(setPoems(newPoems));
+				_reactRouter.browserHistory.push('/poem');
+			});
+		};
+	};
+	
+	var deletePoem = exports.deletePoem = function deletePoem(id) {
+		return function (dispatch, getState) {
+			return _axios2.default.delete('/api/poem/' + id + '/delete').then(function (res) {
+				return res.data;
+			}).then(function () {
+				var updatedPoems = getState().poems.poems;
+				dispatch(setPoems(updatedPoems));
+				_reactRouter.browserHistory.push('/poem');
+			});
+		};
+	};
 
 /***/ },
-/* 305 */
-/***/ function(module, exports) {
+/* 311 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
-	var ADD_POEM = exports.ADD_POEM = 'ADD_POEM';
-	var RECEIVE_POEMS = exports.RECEIVE_POEMS = 'RECEIVE_POEMS';
-	var RECEIVE_POEM = exports.RECEIVE_POEM = 'RECEIVE_POEM';
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(178);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var NavbarUnauthorized = function NavbarUnauthorized(props) {
+		return _react2.default.createElement('div', { className: 'navbar-unauth' });
+	};
+	
+	exports.default = NavbarUnauthorized;
 
 /***/ }
 /******/ ]);

@@ -4,7 +4,7 @@ import Poems from '../components/Poems'
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		poems: state.poems
+		poems: state.poems.poems
 	}
 }
 

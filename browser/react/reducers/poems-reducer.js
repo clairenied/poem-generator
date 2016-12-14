@@ -1,22 +1,33 @@
 const initialState = {
 	poems: [],
-	poem: {}
+	poem: {
+		tags: [],
+		user: {
+			email: ''
+		}
+	}
 }
 
-const reducer = (prev=initialState, action) => {
+export const poemsReducer = (prev=initialState, action) => {
 	switch(action.type){
 		case 'RECEIVE_POEMS':
 			return Object.assign({}, prev, {
 				poems: action.poems
 			})
 			break
-		case 'RECEIVE_POEM':
-			return Object.assign({}, prev, {
-				poem: action.poem
-			})
 		default:
 			return prev
 	}
 }
 
-export default reducer
+export const poemReducer = (prev=initialState, action) => {
+	switch(action.type){
+		case 'RECEIVE_POEM':
+			return Object.assign({}, prev, {
+				poem: action.poem
+			})
+			break
+		default: 
+			return prev
+	}
+}

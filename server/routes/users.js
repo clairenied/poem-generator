@@ -2,9 +2,30 @@ const express = require('express');
 const router = express.Router();
 const chalk = require('chalk')
 
-const models = require('../models')
-const Poem = models.Poem;
-const User = models.User;
+const Poem = require('../models/poem')
+const User = require('../models/user')
+
+router.use(require('../middleware/standardMiddleware'));
+
+// signup
+router.post('/', (req, res, next) => {
+	return User.create(req.body)
+	.then(user => {
+		req.session.userId = user.id
+		res.json(user)
+	})
+	.catch(next)
+})
+
+router.get('/', (req, res, next) => {
+	return User.findAll()
+	.then(users => {
+		res.json(users)
+	})
+	.catch(next)
+})
+
+router.use(require('../middleware/authenticationMiddleware'));
 
 // router.get('/:id', function(req, res, next){
 //   Poem.findOne({

@@ -22,6 +22,15 @@ h1, h2, h3, h4, h5, h6 {
 	letter-spacing: 1px;
 }
 
+.logo-image {
+	font-family: 'Playfair Display', serif;
+	font-weight: 900;
+	margin: 0 auto;
+	background: -webkit-linear-gradient(left, #BF004F, #001da3);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
 a {
 	color: #282828;
 	text-decoration: none;
@@ -52,6 +61,19 @@ a.delete-edit {
 	-webkit-transform: translateZ(0);
 }
 
+.navbar-unauth {
+	padding: 1.25rem;
+	margin: 0;
+	box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.25);
+	background: -webkit-linear-gradient(left, #BF004F, #001da3);
+	width: 100%;
+	z-index: 100;
+	position: fixed;
+	top: 0;
+	left: 0;
+	-webkit-transform: translateZ(0);
+}
+
 .navbar-link-container {
 	margin: 0 1.25rem;
 	display: inline-block;
@@ -64,6 +86,16 @@ a.delete-edit {
 .navbar-right {
 	float: right;
 	margin-right: 2rem;
+}
+
+.login-title {
+	text-align: center;
+	margin: 0 auto 10% auto;
+}
+
+.login-form {
+	margin: 0 auto;
+	max-width: 600px;
 }
 
 .title {
@@ -119,10 +151,18 @@ button {
 	font-size: 16px;
 	color: #4203af;
 	background-color: white;
-	margin: 0 auto;
+	margin: 0 auto 2rem auto;
 }
 
 button:hover {
 	cursor: pointer;
 	color: #e0e0e0;
+}
+
+.warning: {
+	color: #ed0043;
+}
+
+.oauth {
+	margin-bottom: 2rem;
 }

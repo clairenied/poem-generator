@@ -1,26 +1,51 @@
 import React from 'react'
 
-const AddPoem = (props) => {
-	return(
-		<div>
-			<form>
-		    <h2>Add Poem</h2>
-		  	<label>Username</label>
-		  	<input type="text" name="username"/>
+// remember to come back and have the poems automatically associate with their users
 
-		  	<label>Title</label>
-		  	<input type="text" name="title"/>
+class AddPoem extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			title: '',
+			text: '',
+			tags: ''
+		}
+		this.handleSubmit = this.handleSubmit.bind(this)
+	}
 
-		  	<label>Poem</label>
-		  	<textarea name="text"></textarea>
+	handleChange(field, evt){
+		this.setState({
+			[field]: evt.target.value
+		})
+	}
 
-		  	<label>Tags</label>
-		  	<input type="text" name="tags"/>
+	handleSubmit(evt){
+		evt.preventDefault()
+		const newPoem = this.state
+		this.props.createPoem(newPoem)
+	}
 
-		  	<button>Submit</button>
-			</form>
-		</div>
-	)
+	render(){
+		return(
+			<div>
+				<Navbar/>
+				<form onSubmit={this.handleSubmit}>
+			    <h2>Now Editing { this.state.title }</h2>
+			  	
+			  	<label>Title</label>
+			  	<input type="text" onChange={this.handleChange.bind(this, 'title')} value={this.state.title} name="title"/>
+
+			  	<label>Poem</label>
+			  	<textarea onChange={this.handleChange.bind(this, 'text')} value={this.state.poem} name="text"></textarea>
+
+			  	<label>Tags</label>
+			  	<input type="text" onChange={this.handleChange.bind(this, 'tags')} value={this.state.tags} name="tags"/>
+
+			  	<button>Submit</button>
+				</form>
+			</div>	
+		)
+	}
 } 
 
 export default AddPoem

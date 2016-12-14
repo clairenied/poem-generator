@@ -8,7 +8,6 @@ import store from '../store'
 export default function (props) {
 	return(
 		<div>
-      <Navbar/>
       <div className="main">
 	      {
           props.children && React.cloneElement(props.children, props)

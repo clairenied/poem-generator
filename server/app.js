@@ -3,13 +3,15 @@ const app = express();
 const chalk = require('chalk')
 const path = require('path')
 
+const { generateImage } = require('random-ascii-image-generator')
+
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
 
 const bodyParser = require('body-parser');
 const routes = require('./routes/');
 
-const models = require('./models')
+const poemDb = require('./models')
 
 app.use(morgan('tiny'));
 
@@ -20,47 +22,13 @@ app.use(bodyParser.json());
 app.use('/', express.static('public'))
 
 
-models.poemDb.sync({ 
-	// force: true 
+poemDb.sync({ 
+	force: true 
 })
 .then(function () {
   app.listen(3000, function () {
-
-    console.log(chalk.cyan(`
-    
-      
-                             /|\\
-                           //   \\\\           ) )
-                         //       \\\\        ( (
-                       //           \\\\       ) ) 
-                     //               \\\\   ______    
-                   //                   \\\\ |__|_|
-                 //                       \\\\_|__|
-               //        ____________       \\\\|_|      
-             //          |__________|         \\\\|
-           //            ||   ||   ||           \\\\                          OOOOOOOOOOOO
-         //              ||===||===||             \\\\                       OOOOOOOOOOOOOO
-       //                ||___||___||               \\\\                    OOOOOOOOOOOOOOOO
-     //                  |__________|                 \\\\                  OOOOOOOOOOOOOOOO
-   //                                                   \\\\    /|_/|       OOOOOOOOOOOOOOOO
- //|                     ____________     ____________   |\\\\ /o o |       OOOOOOOOOOOOOOOO
-   |          o          |__________|     |__________|   |  /     |        OOOOOOOOOOOOOO
-   |        __|__        ||        ||     ||   ||   ||   | (oo__  |         OOOOOOOOOOOO
-   |       | o o |       ||        ||     ||   ||   ||   |    |   |             XXXX
-   |     o-| === |-o     ||        ||     ||===||===||   |    |   |             XXXX
-   |       |_____|       ||        ||     ||   ||   ||   |    |   |____________/|XXX
-   |    _  /|. .|\\  _    ||       O||     ||___||___||   |    |                 |XXX
-...|     \\/ | . | \\/     ||        ||     |__________|   |....|                x|XXX......
-...|        |___|        ||        ||                    |....|                 |XXX......
-...|        |+++|        ||        ||                    |....|   ___________)  |XXX......
-...|        |+++|        ||        ||                    |....|  | |.......| |  |XXX......
-...|........|+|+|........||________||....................|....|  | |.......| |  |XXX......
-.............|.|..............................................|  |o|.......|o|  |.........
-............oo.oo.............................................|oo|...........|oo|.........
-..........................................................................................   
-.......................................................................................... 
-..........................................................................................`));
-  console.log(chalk.green('App listening on port 3000'))
+  	generateImage()
+  	console.log(chalk.green('App listening on port 3000'))
   });
 })
 .catch(console.error);

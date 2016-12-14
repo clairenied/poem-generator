@@ -4,7 +4,8 @@ import App from '../components/App'
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		poems: state.poems
+		poems: state.poems,
+		user: state.user
 	}
 }
 

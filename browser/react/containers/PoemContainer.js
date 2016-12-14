@@ -4,12 +4,15 @@ import PoemPage from '../components/PoemPage'
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		poem: state.poems.poem
+		poem: state.poem.poem
+		// tags: state.poem.poem.tags
 	}
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-	return {}
+	return {
+		deletePoem: (id) => { dispatch(deletePoem(id)) }
+	}
 }
 
 const PoemContainer = connect(

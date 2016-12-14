@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const models = require('../models')
-const Poem = models.Poem;
-const User = models.User;
+const Poem = require('../models/poem')
+const User = require('../models/user')
 
 // router.get('/', function(req, res, next){
 // 	User.findAll({include: [Poem]})

@@ -2,8 +2,8 @@ import React from 'react'
 import { Link } from 'react-router'
 
 const Poem = (props) => {
-	console.log('poem props', props.poem)
 	const poem = props.poem
+	console.log('poem props', props)
 	return (
 		<div className="post">
 	    <h2><Link to={`/poem/${poem.id}`}>{ poem.title }</Link></h2>
